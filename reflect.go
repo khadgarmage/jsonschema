@@ -36,6 +36,8 @@ type Type struct {
 	// RFC draft-wright-json-schema-validation-00, section 5
 	MultipleOf           int              `json:"multipleOf,omitempty"`           // section 5.1
 	Maximum              int              `json:"maximum,omitempty"`              // section 5.2
+	Key                  bool             `json:"key,omitempty"`                  // section 5.2 custom
+	Query                bool             `json:"query,omitempty"`                // section 5.2 custom
 	ExclusiveMaximum     bool             `json:"exclusiveMaximum,omitempty"`     // section 5.3
 	Minimum              int              `json:"minimum,omitempty"`              // section 5.4
 	ExclusiveMinimum     bool             `json:"exclusiveMinimum,omitempty"`     // section 5.5
@@ -49,12 +51,13 @@ type Type struct {
 	UniqueItems          bool             `json:"uniqueItems,omitempty"`          // section 5.12
 	MaxProperties        int              `json:"maxProperties,omitempty"`        // section 5.13
 	MinProperties        int              `json:"minProperties,omitempty"`        // section 5.14
-	Required             []string         `json:"required,omitempty"`             // section 5.15
+	Required             bool             `json:"required,omitempty"`             // section 5.15 alter
 	Properties           map[string]*Type `json:"properties,omitempty"`           // section 5.16
 	PatternProperties    map[string]*Type `json:"patternProperties,omitempty"`    // section 5.17
 	AdditionalProperties json.RawMessage  `json:"additionalProperties,omitempty"` // section 5.18
 	Dependencies         map[string]*Type `json:"dependencies,omitempty"`         // section 5.19
 	Enum                 []interface{}    `json:"enum,omitempty"`                 // section 5.20
+	OptionLabels         []interface{}    `json:"optionLabels,omitempty"`         // section 5.20 custom
 	Type                 string           `json:"type,omitempty"`                 // section 5.21
 	AllOf                []*Type          `json:"allOf,omitempty"`                // section 5.22
 	AnyOf                []*Type          `json:"anyOf,omitempty"`                // section 5.23
@@ -65,6 +68,7 @@ type Type struct {
 	Title       string        `json:"title,omitempty"`       // section 6.1
 	Description string        `json:"description,omitempty"` // section 6.1
 	Default     interface{}   `json:"default,omitempty"`     // section 6.2
+	Order       interface{}   `json:"order,omitempty"`       // section 6.2 custom
 	Format      string        `json:"format,omitempty"`      // section 7
 	Examples    []interface{} `json:"examples,omitempty"`    // section 7.4
 	// RFC draft-wright-json-schema-hyperschema-00, section 4
@@ -301,7 +305,7 @@ func (r *Reflector) reflectStructFields(st *Type, definitions Definitions, t ref
 	}
 	for i := 0; i < t.NumField(); i++ {
 		f := t.Field(i)
-		name, exist, required := r.reflectFieldName(f)
+		name, exist, _ := r.reflectFieldName(f)
 		// if anonymous and exported type should be processed recursively
 		// current type should inherit properties of anonymous one
 		if name == "" {
@@ -314,9 +318,6 @@ func (r *Reflector) reflectStructFields(st *Type, definitions Definitions, t ref
 		property := r.reflectTypeToSchema(definitions, f.Type)
 		property.structKeywordsFromTags(f)
 		st.Properties[name] = property
-		if required {
-			st.Required = append(st.Required, name)
-		}
 	}
 }
 
