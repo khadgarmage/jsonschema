@@ -36,7 +36,7 @@ type Type struct {
 	// RFC draft-wright-json-schema-validation-00, section 5
 	MultipleOf           int              `json:"multipleOf,omitempty"`           // section 5.1
 	Maximum              int              `json:"maximum,omitempty"`              // section 5.2
-	Pk                   bool             `json:"pk,omitempty"`                   // section 5.2 custom
+	ID                   bool             `json:"id,omitempty"`                   // section 5.2 custom
 	AutoIncrement        bool             `json:"autoIncrement,omitempty"`        // section 5.2 custom
 	Query                bool             `json:"query,omitempty"`                // section 5.2 custom
 	ExclusiveMaximum     bool             `json:"exclusiveMaximum,omitempty"`     // section 5.3
