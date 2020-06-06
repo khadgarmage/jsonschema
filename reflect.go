@@ -36,6 +36,7 @@ type Type struct {
 	Version string `json:"$schema,omitempty"` // section 6.1
 	Ref     string `json:"$ref,omitempty"`    // section 7
 	// RFC draft-wright-json-schema-validation-00, section 5
+<<<<<<< HEAD
 	MultipleOf           int                    `json:"multipleOf,omitempty"`           // section 5.1
 	Maximum              int                    `json:"maximum,omitempty"`              // section 5.2
 	ExclusiveMaximum     bool                   `json:"exclusiveMaximum,omitempty"`     // section 5.3
@@ -63,10 +64,44 @@ type Type struct {
 	OneOf                []*Type                `json:"oneOf,omitempty"`                // section 5.24
 	Not                  *Type                  `json:"not,omitempty"`                  // section 5.25
 	Definitions          Definitions            `json:"definitions,omitempty"`          // section 5.26
+=======
+	MultipleOf           int              `json:"multipleOf,omitempty"`           // section 5.1
+	Maximum              int              `json:"maximum,omitempty"`              // section 5.2
+	ID                   bool             `json:"id,omitempty"`                   // section 5.2 custom
+	AutoIncrement        bool             `json:"autoIncrement,omitempty"`        // section 5.2 custom
+	Index                bool             `json:"index,omitempty"`                // section 5.2 custom
+	ExclusiveMaximum     bool             `json:"exclusiveMaximum,omitempty"`     // section 5.3
+	Minimum              int              `json:"minimum,omitempty"`              // section 5.4
+	ExclusiveMinimum     bool             `json:"exclusiveMinimum,omitempty"`     // section 5.5
+	MaxLength            int              `json:"maxLength,omitempty"`            // section 5.6
+	MinLength            int              `json:"minLength,omitempty"`            // section 5.7
+	Pattern              string           `json:"pattern,omitempty"`              // section 5.8
+	AdditionalItems      *Type            `json:"additionalItems,omitempty"`      // section 5.9
+	Items                *Type            `json:"items,omitempty"`                // section 5.9
+	MaxItems             int              `json:"maxItems,omitempty"`             // section 5.10
+	MinItems             int              `json:"minItems,omitempty"`             // section 5.11
+	UniqueItems          bool             `json:"uniqueItems,omitempty"`          // section 5.12
+	MaxProperties        int              `json:"maxProperties,omitempty"`        // section 5.13
+	MinProperties        int              `json:"minProperties,omitempty"`        // section 5.14
+	Required             bool             `json:"required,omitempty"`             // section 5.15 alter
+	Properties           map[string]*Type `json:"properties,omitempty"`           // section 5.16
+	PatternProperties    map[string]*Type `json:"patternProperties,omitempty"`    // section 5.17
+	AdditionalProperties json.RawMessage  `json:"additionalProperties,omitempty"` // section 5.18
+	Dependencies         map[string]*Type `json:"dependencies,omitempty"`         // section 5.19
+	Enum                 []interface{}    `json:"enum,omitempty"`                 // section 5.20
+	OptionLabels         []interface{}    `json:"optionLabels,omitempty"`         // section 5.20 custom
+	Type                 string           `json:"type,omitempty"`                 // section 5.21
+	AllOf                []*Type          `json:"allOf,omitempty"`                // section 5.22
+	AnyOf                []*Type          `json:"anyOf,omitempty"`                // section 5.23
+	OneOf                []*Type          `json:"oneOf,omitempty"`                // section 5.24
+	Not                  *Type            `json:"not,omitempty"`                  // section 5.25
+	Definitions          Definitions      `json:"definitions,omitempty"`          // section 5.26
+>>>>>>> develop
 	// RFC draft-wright-json-schema-validation-00, section 6, 7
 	Title       string        `json:"title,omitempty"`       // section 6.1
 	Description string        `json:"description,omitempty"` // section 6.1
 	Default     interface{}   `json:"default,omitempty"`     // section 6.2
+	Order       interface{}   `json:"order,omitempty"`       // section 6.2 custom
 	Format      string        `json:"format,omitempty"`      // section 7
 	Examples    []interface{} `json:"examples,omitempty"`    // section 7.4
 	// RFC draft-wright-json-schema-hyperschema-00, section 4
@@ -304,7 +339,7 @@ func (r *Reflector) reflectStructFields(st *Type, definitions Definitions, t ref
 	}
 	for i := 0; i < t.NumField(); i++ {
 		f := t.Field(i)
-		name, exist, required := r.reflectFieldName(f)
+		name, exist, _ := r.reflectFieldName(f)
 		// if anonymous and exported type should be processed recursively
 		// current type should inherit properties of anonymous one
 		if name == "" {
@@ -315,12 +350,17 @@ func (r *Reflector) reflectStructFields(st *Type, definitions Definitions, t ref
 		}
 
 		property := r.reflectTypeToSchema(definitions, f.Type)
+<<<<<<< HEAD
 		property.structKeywordsFromTags(f, st, name)
 
 		st.Properties.Set(name, property)
 		if required {
 			st.Required = append(st.Required, name)
 		}
+=======
+		property.structKeywordsFromTags(f)
+		st.Properties[name] = property
+>>>>>>> develop
 	}
 }
 
@@ -600,6 +640,7 @@ func (r *Reflector) reflectFieldName(f reflect.StructField) (string, bool, bool)
 	}
 
 	return name, exist, required
+<<<<<<< HEAD
 }
 
 func (s *Schema) MarshalJSON() ([]byte, error) {
@@ -644,3 +685,6 @@ func (t *Type) MarshalJSON() ([]byte, error) {
 		return append(b, m[1:]...), nil
 	}
 }
+=======
+}
+>>>>>>> develop
