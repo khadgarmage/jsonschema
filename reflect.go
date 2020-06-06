@@ -38,7 +38,7 @@ type Type struct {
 	Maximum              int              `json:"maximum,omitempty"`              // section 5.2
 	ID                   bool             `json:"id,omitempty"`                   // section 5.2 custom
 	AutoIncrement        bool             `json:"autoIncrement,omitempty"`        // section 5.2 custom
-	Query                bool             `json:"query,omitempty"`                // section 5.2 custom
+	FK                   bool             `json:"fk,omitempty"`                   // section 5.2 custom
 	ExclusiveMaximum     bool             `json:"exclusiveMaximum,omitempty"`     // section 5.3
 	Minimum              int              `json:"minimum,omitempty"`              // section 5.4
 	ExclusiveMinimum     bool             `json:"exclusiveMinimum,omitempty"`     // section 5.5
